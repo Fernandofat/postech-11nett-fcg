@@ -1,6 +1,21 @@
 @FCG.API_HostAddress = http://localhost:5200
 
-GET {{FCG.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Login como admin
+POST http://localhost:5200/api/authControllers/login?username=admin&password=admin
+Content-Type: application/json
 
-###
+{}
+
+### Login como user
+POST http://localhost:5200/api/authControllers/login?username=user&password=user
+Content-Type: application/json
+
+{}
+
+### Acessar endpoint apenas para Admin
+GET http://localhost:5200/api/secure/admin
+Authorization: Bearer {{token}}
+
+### Acessar endpoint acessível por qualquer usuário autenticado
+GET http://localhost:5200/api/secure/user
+Authorization: Bearer {{token}}
