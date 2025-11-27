@@ -1,4 +1,6 @@
-﻿using FCG.API.Models.ViewModels;
+﻿using FCG.API.Infra.Repository;
+using FCG.API.Models.Entities;
+using FCG.API.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -8,23 +10,23 @@ namespace FCG.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class JogoController : ControllerBase
+    public class GamesController : ControllerBase
     {
-        // GET: api/<JogoController>
-        [HttpGet]
-        public IEnumerable<JogoViewModel> Get()
+        private readonly ILogger<GamesController> _logger;
+        private readonly GamesRepository _repository;
+
+
+        public GamesController(ILogger<GamesController> logger, GamesRepository repository)
         {
-            return new JogoViewModel[] {
-                new JogoViewModel { Nome = "Super Jogo" }
-            };
+            _logger = logger;
+            _repository = repository;
         }
 
-        // GET api/<JogoController>/5
-        [HttpGet("{id}")]
-        public JogoViewModel Get(int id)
+        // GET: api/<JogoController>
+        [HttpGet]
+        public async Task<IEnumerable<Games>> Get()
         {
-            // Exemplo simples — em um cenário real você buscaria o jogo por id
-            return new JogoViewModel { Nome = $"Jogo {id}" };
+            return await _repository.GetAllGames();
         }
 
         // POST api/<JogoController>

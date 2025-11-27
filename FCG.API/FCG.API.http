@@ -19,3 +19,11 @@ Authorization: Bearer {{token}}
 ### Acessar endpoint acessível por qualquer usuário autenticado
 GET http://localhost:5200/api/secure/user
 Authorization: Bearer {{token}}
+
+{}
+
+### Testar a conexão com o Banco.
+GET {{dotnet_dapper_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
