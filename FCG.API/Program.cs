@@ -1,4 +1,7 @@
 using FCG.API;
+using FCG.API.Infra;
+using FCG.API.Infra.Config;
+using FCG.API.Infra.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -43,6 +46,26 @@ builder.Services.AddControllers();
 
 #endregion
 
+
+#region [DB] Configuração do Banco de Dados
+string postgresConnectionString = builder.Configuration.GetSection("Connections:PostgreSQL").Value;
+
+//builder.Services.AddHealthChecks()
+//    .AddNpgSql(
+//    postgresConnectionString,
+//    name: "PostgreSQL",
+//    failureStatus: HealthStatus.Unhealthy,
+//    tags: new[] { "db", "sql", "postgres" });
+
+#endregion
+
+
+#region [DI] Injeção de dependência
+builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("Connections"));
+builder.Services.AddSingleton<DbConnectionProvider>();
+builder.Services.AddScoped<GamesRepository>();
+#endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,6 +74,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//#region [Healthcheck]
+//app.UseHealthChecks("/health", new HealthCheckOptions
+//{
+//    Predicate = _ => true,
+//    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+
+//});
 
 app.UseLogMiddleware();
 
